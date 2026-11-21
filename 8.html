@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="uk" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Географія 8 клас — Інтерактивна вікторина</title>
+    <!-- Підключення Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Підключення шрифту Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Підключення іконок Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'media',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            900: '#134e4a',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(16px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Додаткові стилі для плавності скролу та кастомних елементів */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-card:active {
+            transform: scale(0.99);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col justify-between selection:bg-teal-500 selection:text-white">
+
+    <!-- Верхня навігаційна панель -->
+    <header class="sticky top-0 z-30 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
+                    <i data-lucide="compass" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm sm:text-base leading-tight">Географія України • 8 клас</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Рельєф, тектоніка та надра (§§ 12–18)</p>
+                </div>
+            </div>
+            
+            <!-- Індикатор прогресу та таймер (активні під час тесту) -->
+            <div id="quiz-header-stats" class="hidden items-center gap-3 sm:gap-4">
+                <div class="hidden sm:flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400"></i>
+                    <span id="timer-display">00:00</span>
+                </div>
+                <div class="text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800">
+                    <span id="progress-counter">1 / 24</span>
+                </div>
+            </div>
+        </div>
+        <!-- Смуга прогресу -->
+        <div id="progress-bar-container" class="hidden w-full h-1 bg-slate-200 dark:bg-slate-800">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-teal-500 to-emerald-500 transition-all duration-300 ease-out" style="width: 4.16%"></div>
+        </div>
+    </header>
+
+    <!-- Головний контейнер -->
+    <main class="flex-grow flex items-center justify-center px-4 py-8 sm:py-12">
+        <div class="w-full max-w-3xl">
+
+            <!-- ЕКРАН 1: СТАРТОВИЙ ЕКРАН -->
+            <section id="start-screen" class="animate-slide-up bg-white dark:bg-slate-900 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200/80 dark:border-slate-800 p-6 sm:p-10">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 text-xs font-semibold mb-6 border border-teal-200/60 dark:border-teal-800/60">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    <span>Компетентнісно орієнтоване тестування</span>
+                </div>
+
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">
+                    Рельєф, тектонічна та геологічна будова, мінеральні ресурси України
+                </h2>
+                
+                <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed mb-8">
+                    Перевірте свої знання з природи України! На вас чекають 24 життєві та аналітичні завдання за матеріалами §§ 12–18. Варіанти відповідей перемішуються автоматично для кожного учасника.
+                </p>
+
+                <!-- Картки з параметрами тесту -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="help-circle" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400">Кількість завдань</div>
+                            <div class="font-bold text-slate-900 dark:text-white">24 запитання</div>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="award" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400">Оцінювання</div>
+                            <div class="font-bold text-slate-900 dark:text-white">До 12 балів</div>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400">Режим перевірки</div>
+                            <div class="font-bold text-slate-900 dark:text-white">Миттєвий аналіз</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Форма введення даних учасника -->
+                <div class="space-y-4">
+                    <div>
+                        <label for="student-name" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                            Прізвище та Ім’я учня / учениці <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                                <i data-lucide="user" class="w-5 h-5"></i>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="student-name" 
+                                placeholder="Наприклад: Коваленко Олександр" 
+                                class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                            >
+                        </div>
+                        <!-- Повідомлення про помилку валідації (замість alert) -->
+                        <p id="name-error" class="hidden mt-2 text-xs font-medium text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
+                            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                            <span>Будь ласка, введіть ваше прізвище та ім’я перед початком тестування.</span>
+                        </p>
+                    </div>
+
+                    <div class="pt-2">
+                        <button 
+                            id="start-btn"
+                            class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold text-base shadow-lg shadow-teal-600/25 hover:shadow-teal-600/40 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                        >
+                            <span>Розпочати вікторину</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ЕКРАН 2: ПРОХОДЖЕННЯ ВІКТОРИНИ -->
+            <section id="quiz-screen" class="hidden animate-fade-in">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200/80 dark:border-slate-800 p-6 sm:p-10">
+                    
+                    <!-- Номер та текст запитання -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span id="question-badge" class="inline-flex items-center px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                                Запитання 1 з 24
+                            </span>
+                            <span id="score-live" class="text-xs font-semibold text-teal-600 dark:text-teal-400">
+                                Правильних відповідей: 0
+                            </span>
+                        </div>
+                        <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug">
+                            Текст запитання завантажується...
+                        </h3>
+                    </div>
+
+                    <!-- Контейнер варіантів відповідей -->
+                    <div id="options-container" class="space-y-3 mb-8">
+                        <!-- Варіанти генеруються через JS -->
+                    </div>
+
+                    <!-- Блок миттєвого фідбеку -->
+                    <div id="feedback-banner" class="hidden mb-6 p-4 rounded-2xl border text-sm font-medium flex items-start gap-3">
+                        <i id="feedback-icon" data-lucide="check-circle-2" class="w-5 h-5 shrink-0 mt-0.5"></i>
+                        <div id="feedback-text"></div>
+                    </div>
+
+                    <!-- Нижня панель навігації -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                            <i data-lucide="info" class="w-4 h-4"></i>
+                            <span>Оберіть один варіант відповіді для продовження</span>
+                        </div>
+                        <button 
+                            id="next-btn" 
+                            disabled
+                            class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-slate-900 dark:bg-teal-600 text-white font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-800 dark:hover:bg-teal-500 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                            <span id="next-btn-text">Наступне запитання</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ЕКРАН 3: РЕЗУЛЬТАТИ -->
+            <section id="result-screen" class="hidden animate-slide-up space-y-6">
+                <!-- Головна картка результату -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200/80 dark:border-slate-800 p-6 sm:p-10 text-center">
+                    <div id="result-badge-icon" class="w-20 h-20 mx-auto mb-5 rounded-3xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center shadow-lg shadow-teal-500/30">
+                        <i data-lucide="trophy" class="w-10 h-10"></i>
+                    </div>
+
+                    <p class="text-sm font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wider mb-1">
+                        Тестування завершено
+                    </p>
+                    <h2 id="result-student-name" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
+                        Учень
+                    </h2>
+                    <p id="result-verdict" class="text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-lg mx-auto mb-8">
+                        Чудовий результат! Ви впевнено володієте знаннями про геологічну будову та рельєф України.
+                    </p>
+
+                    <!-- Статистика у 3 колонки -->
+                    <div class="grid grid-cols-3 gap-3 sm:gap-6 max-w-xl mx-auto mb-8">
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-800">
+                            <div class="text-xs text-slate-500 dark:text-slate-400 mb-1">Правильних</div>
+                            <div id="stat-correct" class="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">0 / 24</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-800">
+                            <div class="text-xs text-slate-500 dark:text-slate-400 mb-1">Оцінка (12-б.)</div>
+                            <div id="stat-grade" class="text-2xl sm:text-3xl font-extrabold text-teal-600 dark:text-teal-400">12</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-800">
+                            <div class="text-xs text-slate-500 dark:text-slate-400 mb-1">Витрачено часу</div>
+                            <div id="stat-time" class="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-slate-200">00:00</div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки дій -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button 
+                            id="copy-result-btn"
+                            class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span id="copy-btn-text">Скопіювати результат для вчителя</span>
+                        </button>
+                        <button 
+                            id="restart-btn"
+                            class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-semibold text-sm shadow-md shadow-teal-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            <span>Пройти ще раз</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Детальний розбір відповідей -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="list-checks" class="w-5 h-5 text-teal-600"></i>
+                            <span>Детальний огляд відповідей</span>
+                        </h3>
+                        <button id="toggle-review-btn" class="text-xs font-semibold text-teal-600 dark:text-teal-400 hover:underline cursor-pointer">
+                            Згорнути
+                        </button>
+                    </div>
+                    <div id="review-list" class="space-y-4">
+                        <!-- Список розбору генерується через JS -->
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="py-6 text-center text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200/60 dark:border-slate-800/60">
+        <p>Географія України • 8 клас • Інтерактивний навчальний тренажер</p>
+    </footer>
+
+    <!-- Повідомлення-тост про копіювання -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 dark:bg-slate-800 text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-2.5 text-sm font-medium">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span>Результат скопійовано до буфера обміну!</span>
+    </div>
+
+    <script>
+        // Ініціалізація іконок Lucide
+        lucide.createIcons();
+
+        // База запитань зі скрипту (індекс 0 у вихідному масиві — завжди правильна відповідь)
+        const rawQuestions = [
+            {
+                q: 'Геологи відібрали зразок граніту на Українському щиті та визначили співвідношення маси урану й свинцю в породі. Яку інформацію про гірську породу дає змогу отримати цей метод?',
+                options: [
+                    'Абсолютний вік породи в роках, обчислений за швидкістю радіоактивного розпаду',
+                    'Відносний вік породи, встановлений за послідовністю залягання осадових шарів',
+                    'Глибину залягання кристалічного фундаменту під товщею четвертинних відкладів',
+                    'Напрямок горизонтального переміщення літосферної плити в палеозойську еру'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Майже вся територія України вкрита четвертинними відкладами, проте на геологічній карті їх зображують лише в місцях найбільшого поширення. З якою метою картографи застосовують такий прийом?',
+                options: [
+                    'Щоб показати строкатість поширення та вік давніших корінних порід під ними',
+                    'Щоб відобразити сучасну сейсмічну активність і межі глибинних розломів кори',
+                    'Щоб виділити райони поширення вічної мерзлоти та давнього зледеніння рівнин',
+                    'Щоб спростити пошук підземних артезіанських басейнів у межах річкових долин'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Під час екскурсії Подільською височиною учні побачили скелясте пасмо Товтр, складене вапняками з рештками давніх морських організмів. Як утворилася ця унікальна форма рельєфу?',
+                options: [
+                    'Як бар’єрний кораловий риф уздовж берегової лінії теплого неогенового моря',
+                    'Як вулканічний хребет унаслідок виливу лави вздовж розломів земної кори',
+                    'Як кінцева морена, нагорнута давнім материковим льодовиком із півночі',
+                    'Як тектонічний горст, піднятий під час герцинської епохи гороутворення'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Інженери-будівельники проєктують багатоповерховий житловий комплекс у Чернівцях та Одесі. Вплив якого сейсмічно активного осередку вони обов’язково мають врахувати в розрахунках стійкості споруд?',
+                options: [
+                    'Зони Вранча, розташованої на межі Південних і Східних Карпат у Румунії',
+                    'Донецької складчастої споруди, що зазнає інтенсивного підняття в кайнозої',
+                    'Воронезького кристалічного масиву на північному сході Східноєвропейської платформи',
+                    'Словечансько-Овруцького кряжа в межах північної частини Поліської низовини'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Геофізичне зондування земної кори показало, що під глибоководною частиною Чорного моря відсутній гранітний шар, наявний під суходолом України. Про що свідчить така будова кори?',
+                options: [
+                    'Про поширення земної кори океанічного типу в межах Чорноморської западини',
+                    'Про вихід на поверхню дна найдавніших архейських порід Скіфської платформи',
+                    'Про інтенсивне накопичення осадових порід у межах Передкарпатського прогину',
+                    'Про формування молодої складчастої споруди на місці колишнього океану Тетіс'
+                ],
+                correct: 0
+            },
+            {
+                q: 'У долинах річок поблизу Житомира та Запоріжжя на поверхню виходять скелі з гранітів і гнейсів, а біля Полтави бурові свердловини проходять кілометри пісків і глин. Чим зумовлена ця відмінність?',
+                options: [
+                    'Житомир і Запоріжжя лежать на Українському щиті, а Полтава — у межах западини',
+                    'Житомир і Запоріжжя лежать у складчастій області, а Полтава — на давньому щиті',
+                    'Житомир і Запоріжжя лежать на Скіфській платформі, а Полтава — на Волинській плиті',
+                    'Житомир і Запоріжжя лежать у Передкарпатському прогині, а Полтава — на кряжі'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Туристична група планує здійснити сходження на найвищу вершину рівнинної частини України, не виїжджаючи в гірські райони. Яку географічну точку їм слід обрати для маршруту?',
+                options: [
+                    'Гору Берда на Хотинській височині з абсолютною висотою 515 метрів',
+                    'Гору Камула на Подільській височині з абсолютною висотою 471 метр',
+                    'Гору Могила-Мечетна на Донецькому кряжі з абсолютною висотою 367 метрів',
+                    'Гору Бельмак-Могила на Приазовській височині з абсолютною висотою 324 метри'
+                ],
+                correct: 0
+            },
+            {
+                q: 'На околицях Сімферополя учні спостерігали асиметричні гірські хребти (куести), у яких один схил довгий і пологий, а протилежний — крутий і урвистий. Яка причина виникнення такої форми рельєфу?',
+                options: [
+                    'Похиле залягання шарів твердих вапняків і м’яких мергелів, які по-різному руйнуються',
+                    'Однобічне насування давнього льодовика з півночі на Внутрішнє пасмо Кримських гір',
+                    'Вилив в’язкої магми вздовж глибинного розлому на межі зі Скіфською платформою',
+                    'Тривале розчинення підземними водами соляних куполів у передгірній частині Криму'
+                ],
+                correct: 0
+            },
+            {
+                q: 'На плоских ділянках Причорноморської низовини навесні талою водою заповнюються неглибокі округлі зниження — степові блюдця. Який природний процес призводить до їхньої появи?',
+                options: [
+                    'Винесення підземними водами дрібних часток породи та просідання лесових ґрунтів',
+                    'Виорювання поверхні валунами під час танення давнього дніпровського льодовика',
+                    'Осідання земної поверхні над покинутими підземними шахтами з видобутку руди',
+                    'Розмивання поверхні тимчасовими гірськими потоками під час літніх зливових дощів'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Порівнюючи схили річкових долин на Придніпровській низовині, дослідники помітили, що праві береги річок зазвичай високі й круті, а ліві — низькі та терасовані. Який процес є провідним у формуванні таких долин?',
+                options: [
+                    'Робота поверхневих текучих вод, що поєднує річкову ерозію та акумуляцію наносів',
+                    'Діяльність вітру, який переносить піщаний матеріал із заплави на корінний берег',
+                    'Карстове розчинення крейдяних відкладів уздовж лівого берега річкової долини',
+                    'Гравітаційне сповзання водонасичених глин унаслідок підняття фундаменту щита'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Після інтенсивних літніх злив у Карпатах зі схилу гори зійшов раптовий грязекам’яний потік, який зруйнував ділянку автомобільної дороги та міст. До якого типу небезпечних явищ належить цей процес?',
+                options: [
+                    'До гравітаційних схилових процесів, відомих у географії під назвою селі',
+                    'До суфозійних процесів, спричинених вимиванням дрібних часток із ґрунту',
+                    'До еолових процесів, зумовлених перенесенням уламків сильними гірськими вітрами',
+                    'До абразійних процесів, пов’язаних із руйнівною роботою водойм у гірській долині'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Спелеологи досліджують багатокілометрові підземні лабіринти печер на Поділлі, привабливі для розвитку туризму. Наявність яких гірських порід і якого чинника зумовила їхню появу?',
+                options: [
+                    'Легкорозчинних гіпсів і вапняків, які протягом тисячоліть розмивали підземні води',
+                    'Щільних архейських гранітів і кварцитів, розколотих давніми тектонічними рухами',
+                    'Пухких четвертинних пісків і суглинків, перевіяних вітрами в післяльодовиковий час',
+                    'Вулканічних туфів і базальтів, у яких після виверження залишилися газові порожнини'
+                ],
+                correct: 0
+            },
+            {
+                q: 'На Поліській низовині та в межах Олешківських пісків поширені піщані пагорби — дюни та кучугури. Який екзогенний чинник відіграє вирішальну роль у формуванні та переміщенні цих форм рельєфу?',
+                options: [
+                    'Вітрова ерозія та акумуляція сипучих піщаних відкладів на відкритих ділянках',
+                    'Морська абразія та нагромадження черепашкового матеріалу прибережними хвилями',
+                    'Льодовикова акумуляція валунно-глинистого матеріалу на краю давніх озерних улоговин',
+                    'Суфозійне просідання пухких порід над підземними водоносними горизонтами рівнин'
+                ],
+                correct: 0
+            },
+            {
+                q: 'На схилах масиву Чорногора в Карпатах збереглися кріслоподібні заглиблення (кари), а на Поліссі простягаються моренні пасма. Про що свідчить поєднання цих форм рельєфу?',
+                options: [
+                    'Про вплив давнього зледеніння як на гірські системи, так і на північні рівнини України',
+                    'Про активну вулканічну діяльність у кайнозойську еру на всій території нашої держави',
+                    'Про тривале затоплення Полісся та високогір’я Карпат водами крейдового моря',
+                    'Про сучасне інтенсивне опускання земної кори в межах Альпійського складчастого поясу'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Учень будує профіль рельєфу місцевості вздовж лінії А–Б за топографічною картою масштабу 1:10 000. Чому для вертикальної осі профілю він обирає більший масштаб (наприклад, 1:1 000)?',
+                options: [
+                    'Щоб перевищення висот на рівнинній ділянці стали наочними й чітко видимими на кресленні',
+                    'Щоб зменшити довжину профільної лінії та вмістити зображення на стандартному аркуші',
+                    'Щоб вирівняти круті схили річкової долини та уникнути перетину профілю з основою',
+                    'Щоб перевести відносні висоти об’єктів у абсолютні позначки над рівнем Балтійського моря'
+                ],
+                correct: 0
+            },
+            {
+                q: 'На фрагменті топографічної карти горизонталі проведено через 2,5 м, а потовщена горизонталь підписана значенням 150 м. Як визначити висоту сусідньої горизонталі, розташованої ближче до русла річки?',
+                options: [
+                    'Відняти від 150 м висоту перерізу 2,5 м, оскільки поверхня знижується до річки (147,5 м)',
+                    'Додати до 150 м висоту перерізу 2,5 м, оскільки береги річок завжди підняті (152,5 м)',
+                    'Поділити значення 150 м на величину закладення між сусідніми горизонталями на схилі',
+                    'Визначити середнє арифметичне між позначкою 150 м та урізом води в головній річці'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Геологорозвідувальна експедиція шукає перспективні поклади залізних та марганцевих руд на території України. У межах якої тектонічної структури ці пошуки будуть найуспішнішими?',
+                options: [
+                    'У межах Українського щита, де кристалічний фундамент виходить близько до поверхні',
+                    'У межах Причорноморської западини, заповненої потужними морськими відкладами',
+                    'У межах Передкарпатського прогину, складеного товщами молодих осадових порід',
+                    'У межах Волино-Подільської плити, перекритої пластами крейди та вапняків'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Східний нафтогазоносний регіон забезпечує основну частку видобутку природного газу в Україні. З якою тектонічною структурою та геологічною особливістю пов’язане формування цих родовищ?',
+                options: [
+                    'Із Дніпровсько-Донецькою западиною, заповненою осадовим чохлом товщиною 18–20 км',
+                    'Із Українським щитом, де в архейську еру відбувалися потужні виливи магми',
+                    'Із Донецькою складчастою спорудою, де породи зазнали сильного метаморфізму',
+                    'Із Закарпатським прогином, де переважають вулканічні породи альпійської епохи'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Потужні пласти кам’яного вугілля Донецького басейну утворилися з решток гігантських плаунів, хвощів і деревоподібних папоротей у жаркому та вологому кліматі. У який геологічний час існували такі умови?',
+                options: [
+                    'У кам’яновугільний період палеозойської ери під час багаторазових наступів моря',
+                    'У крейдовий період мезозойської ери під час формування прадавніх Карпат і Криму',
+                    'У неогеновий період кайнозойської ери під час відокремлення басейну Чорного моря',
+                    'У протерозойську еру під час початку формування осадового чохла давньої платформи'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Для виплавки сталі металургійним комбінатам Придніпров’я потрібні не лише залізні руди, а й нерудна металургійна сировина. Які корисні копалини використовують для очищення металу від домішок та облицювання печей?',
+                options: [
+                    'Флюсові вапняки, доломіти, кварцити та вогнетривкі глини місцевих родовищ',
+                    'Калійні солі, самородну сірку, фосфорити та торф північно-західних областей',
+                    'Бурштин, графіт, лабрадорит та мінеральні лікувальні води складчастих областей',
+                    'Буре вугілля, горючі сланці, скляний пісок та будівельний граніт щитової зони'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Більшість хребтів Українських Карпат складені зім’ятими в складки осадовими породами, проте Вулканічне пасмо на Закарпатті має інше походження. Як воно сформувалося?',
+                options: [
+                    'Унаслідок виливу магми вздовж глибинних розломів на межі із Закарпатським прогином',
+                    'Унаслідок нагромадження уламків гірських порід, принесених давніми льодовиками',
+                    'Унаслідок підняття коралових рифів із дна мілководного палеогенового морського басейну',
+                    'Унаслідок розчинення соляних пластів підземними водами та обвалу склепінь печер'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Родина споживає в середньому 240 кВт·год електроенергії на місяць. Обчисліть, скільки кам’яного вугілля потрібно спалити на ТЕС для забезпечення річної потреби цієї родини, якщо з 1 кг вугілля виробляють 2 кВт·год електроенергії.',
+                options: [
+                    '1440 кг (або 1,44 тонни) кам’яного вугілля протягом одного календарного року',
+                    '2880 кг (або 2,88 тонни) кам’яного вугілля протягом одного календарного року',
+                    '5760 кг (або 5,76 тонни) кам’яного вугілля протягом одного календарного року',
+                    '1200 кг (або 1,20 тонни) кам’яного вугілля протягом одного календарного року'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Відкритий видобуток залізних руд у Криворізькому басейні та підземний видобуток вугілля на Донбасі докорінно змінюють земну поверхню. Які антропогенні форми рельєфу виникають у цих районах?',
+                options: [
+                    'Глибокі кар’єри, конусоподібні терикони порожньої породи та провали над виробками',
+                    'Карстові лійки, сталактитові печери та суфозійні блюдця на вододільних рівнинах',
+                    'Моренні пасма, водно-льодовикові зандрові рівнини та еолові піщані кучугури',
+                    'Асиметричні куести, вулканічні конуси та тектонічні уступи кристалічного щита'
+                ],
+                correct: 0
+            },
+            {
+                q: 'Учень зіставив тектонічну, геологічну та фізичну карти України для комплексної характеристики Волино-Подільської плити. Яке поєднання природних особливостей він виявить?',
+                options: [
+                    'Височинний рельєф, потужний осадовий чохол та родовища вапняків і кам’яного вугілля',
+                    'Низовинний рельєф, виходи архейських гранітів та найбільші родовища залізних руд',
+                    'Середньовисотні складчасті гори, альпійську складчастість та поклади нафти й газу',
+                    'Плоску приморську низовину, океанічну земну кору та родовища титанових і уранових руд'
+                ],
+                correct: 0
+            }
+        ];
+
+        // Стан додатку
+        let state = {
+            studentName: '',
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            answered: false,
+            userAnswers: [],
+            secondsElapsed: 0,
+            timerInterval: null
+        };
+
+        // Елементи DOM
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const headerStats = document.getElementById('quiz-header-stats');
+        const progressBarContainer = document.getElementById('progress-bar-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressCounter = document.getElementById('progress-counter');
+        const timerDisplay = document.getElementById('timer-display');
+
+        const studentNameInput = document.getElementById('student-name');
+        const nameError = document.getElementById('name-error');
+        const startBtn = document.getElementById('start-btn');
+
+        const questionBadge = document.getElementById('question-badge');
+        const scoreLive = document.getElementById('score-live');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackBanner = document.getElementById('feedback-banner');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackText = document.getElementById('feedback-text');
+        const nextBtn = document.getElementById('next-btn');
+        const nextBtnText = document.getElementById('next-btn-text');
+
+        // Допоміжна функція перемішування масиву (алгоритм Фішера — Єйтса)
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Форматування часу MM:SS
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60).toString().padStart(2, '0');
+            const s = (sec % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        // Підготовка запитань із перемішаними варіантами
+        function prepareQuestions() {
+            return rawQuestions.map((item, idx) => {
+                const mappedOptions = item.options.map((text, optIdx) => ({
+                    text,
+                    isCorrect: optIdx === item.correct
+                }));
+                return {
+                    id: idx + 1,
+                    q: item.q,
+                    options: shuffleArray(mappedOptions)
+                };
+            });
+        }
+
+        // Запуск таймера
+        function startTimer() {
+            clearInterval(state.timerInterval);
+            state.secondsElapsed = 0;
+            timerDisplay.textContent = '00:00';
+            state.timerInterval = setInterval(() => {
+                state.secondsElapsed++;
+                timerDisplay.textContent = formatTime(state.secondsElapsed);
+            }, 1000);
+        }
+
+        // Початок вікторини
+        function startQuiz() {
+            const name = studentNameInput.value.trim();
+            if (!name || name.length < 2) {
+                nameError.classList.remove('hidden');
+                studentNameInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/20');
+                studentNameInput.focus();
+                return;
+            }
+
+            nameError.classList.add('hidden');
+            studentNameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-500/20');
+
+            state = {
+                studentName: name,
+                questions: prepareQuestions(),
+                currentIndex: 0,
+                score: 0,
+                answered: false,
+                userAnswers: [],
+                secondsElapsed: 0,
+                timerInterval: null
+            };
+
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            headerStats.classList.remove('hidden');
+            headerStats.classList.add('flex');
+            progressBarContainer.classList.remove('hidden');
+
+            startTimer();
+            renderQuestion();
+        }
+
+        // Відображення поточного запитання
+        function renderQuestion() {
+            const currentQ = state.questions[state.currentIndex];
+            const total = state.questions.length;
+            state.answered = false;
+
+            // Оновлення прогресу
+            const percent = ((state.currentIndex + 1) / total) * 100;
+            progressBar.style.width = `${percent}%`;
+            progressCounter.textContent = `${state.currentIndex + 1} / ${total}`;
+            questionBadge.textContent = `Запитання ${state.currentIndex + 1} з ${total}`;
+            scoreLive.textContent = `Правильних відповідей: ${state.score}`;
+
+            // Текст запитання
+            questionText.textContent = `${currentQ.id}. ${currentQ.q}`;
+
+            // Скидання фідбеку та кнопки
+            feedbackBanner.classList.add('hidden');
+            nextBtn.disabled = true;
+            nextBtnText.textContent = state.currentIndex === total - 1 ? 'Завершити тест' : 'Наступне запитання';
+
+            // Генерація варіантів
+            const letters = ['А', 'Б', 'В', 'Г'];
+            optionsContainer.innerHTML = '';
+
+            currentQ.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'option-card w-full text-left p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 hover:border-teal-500 dark:hover:border-teal-500 hover:bg-teal-50/30 dark:hover:bg-teal-950/20 flex items-start gap-3.5 cursor-pointer group';
+                
+                btn.innerHTML = `
+                    <span class="letter-badge w-8 h-8 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm flex items-center justify-center shrink-0 group-hover:border-teal-500 group-hover:text-teal-600 transition-colors">
+                        ${letters[idx]}
+                    </span>
+                    <span class="text-sm sm:text-base text-slate-800 dark:text-slate-200 leading-snug pt-1 flex-grow">
+                        ${opt.text}
+                    </span>
+                    <span class="status-icon shrink-0 pt-1 hidden"></span>
+                `;
+
+                btn.addEventListener('click', () => handleAnswer(idx, btn));
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // Обробка вибору відповіді
+        function handleAnswer(selectedIndex, selectedBtn) {
+            if (state.answered) return;
+            state.answered = true;
+
+            const currentQ = state.questions[state.currentIndex];
+            const chosenOption = currentQ.options[selectedIndex];
+            const correctOption = currentQ.options.find(o => o.isCorrect);
+            const allButtons = optionsContainer.querySelectorAll('button');
+
+            // Блокуємо повторне натискання та підсвічуємо результати
+            allButtons.forEach((btn, idx) => {
+                btn.classList.remove('cursor-pointer', 'hover:border-teal-500', 'hover:bg-teal-50/30');
+                btn.classList.add('cursor-default');
+
+                const opt = currentQ.options[idx];
+                const badge = btn.querySelector('.letter-badge');
+                const statusIcon = btn.querySelector('.status-icon');
+
+                if (opt.isCorrect) {
+                    btn.classList.remove('border-slate-200', 'dark:border-slate-800', 'bg-slate-50/50');
+                    btn.classList.add('border-emerald-500', 'bg-emerald-50/80', 'dark:bg-emerald-950/40');
+                    badge.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700');
+                    badge.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+                    statusIcon.innerHTML = '<i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>';
+                    statusIcon.classList.remove('hidden');
+                } else if (idx === selectedIndex && !opt.isCorrect) {
+                    btn.classList.remove('border-slate-200', 'dark:border-slate-800', 'bg-slate-50/50');
+                    btn.classList.add('border-rose-500', 'bg-rose-50/80', 'dark:bg-rose-950/40');
+                    badge.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700');
+                    badge.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+                    statusIcon.innerHTML = '<i data-lucide="x-circle" class="w-5 h-5 text-rose-600 dark:text-rose-400"></i>';
+                    statusIcon.classList.remove('hidden');
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            // Записуємо відповідь в історію
+            state.userAnswers.push({
+                qNumber: currentQ.id,
+                question: currentQ.q,
+                selectedText: chosenOption.text,
+                correctText: correctOption.text,
+                isCorrect: chosenOption.isCorrect
+            });
+
+            // Показуємо банер пояснення
+            feedbackBanner.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-800', 'dark:bg-emerald-950/50', 'dark:border-emerald-800', 'dark:text-emerald-300', 'bg-rose-50', 'border-rose-200', 'text-rose-800', 'dark:bg-rose-950/50', 'dark:border-rose-800', 'dark:text-rose-300');
+
+            if (chosenOption.isCorrect) {
+                state.score++;
+                scoreLive.textContent = `Правильних відповідей: ${state.score}`;
+                feedbackBanner.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-800', 'dark:bg-emerald-950/50', 'dark:border-emerald-800', 'dark:text-emerald-300');
+                feedbackBanner.innerHTML = `
+                    <i data-lucide="check-circle-2" class="w-5 h-5 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400"></i>
+                    <div><strong>Правильно!</strong> Ви обрали точну географічну відповідь.</div>
+                `;
+            } else {
+                feedbackBanner.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-800', 'dark:bg-rose-950/50', 'dark:border-rose-800', 'dark:text-rose-300');
+                feedbackBanner.innerHTML = `
+                    <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 mt-0.5 text-rose-600 dark:text-rose-400"></i>
+                    <div><strong>Помилка.</strong> Правильна відповідь виділена зеленим кольором вище.</div>
+                `;
+            }
+
+            lucide.createIcons();
+            nextBtn.disabled = false;
+        }
+
+        // Перехід до наступного запитання або фінішу
+        function handleNext() {
+            if (state.currentIndex < state.questions.length - 1) {
+                state.currentIndex++;
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        // Завершення тесту та підрахунок результатів
+        function finishQuiz() {
+            clearInterval(state.timerInterval);
+
+            quizScreen.classList.add('hidden');
+            headerStats.classList.add('hidden');
+            progressBarContainer.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            const total = state.questions.length;
+            const grade12 = Math.max(1, Math.round((state.score / total) * 12));
+            const formattedTime = formatTime(state.secondsElapsed);
+
+            document.getElementById('result-student-name').textContent = state.studentName;
+            document.getElementById('stat-correct').textContent = `${state.score} / ${total}`;
+            document.getElementById('stat-grade').textContent = `${grade12} б.`;
+            document.getElementById('stat-time').textContent = formattedTime;
+
+            const verdictEl = document.getElementById('result-verdict');
+            if (grade12 >= 10) {
+                verdictEl.textContent = 'Високий рівень! Ви чудово орієнтуєтеся в тектонічній будові, формах рельєфу та мінеральних ресурсах України.';
+            } else if (grade12 >= 7) {
+                verdictEl.textContent = 'Достатній рівень! Ви добре засвоїли основний матеріал теми, але варто звернути увагу на кілька складних запитань нижче.';
+            } else if (grade12 >= 4) {
+                verdictEl.textContent = 'Середній рівень. Рекомендуємо повторити геохронологічну таблицю та роботу з тектонічною картою в підручнику (§§ 12–18).';
+            } else {
+                verdictEl.textContent = 'Початковий рівень. Опрацюйте матеріали параграфів 12–18 та спробуйте пройти вікторину повторно для закріплення знань.';
+            }
+
+            renderReviewList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Генерація детального огляду відповідей
+        function renderReviewList() {
+            const reviewList = document.getElementById('review-list');
+            reviewList.innerHTML = '';
+
+            state.userAnswers.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border ${
+                    item.isCorrect 
+                    ? 'border-emerald-200/80 dark:border-emerald-900/60 bg-emerald-50/30 dark:bg-emerald-950/20' 
+                    : 'border-rose-200/80 dark:border-rose-900/60 bg-rose-50/30 dark:bg-rose-950/20'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="mt-0.5 shrink-0">
+                            ${item.isCorrect 
+                                ? '<i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>' 
+                                : '<i data-lucide="x-circle" class="w-5 h-5 text-rose-600 dark:text-rose-400"></i>'
+                            }
+                        </div>
+                        <div class="space-y-2 text-sm flex-grow">
+                            <p class="font-semibold text-slate-900 dark:text-white">${item.qNumber}. ${item.question}</p>
+                            <div class="text-xs sm:text-sm space-y-1">
+                                <p class="${item.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}">
+                                    <span class="font-semibold">Ваша відповідь:</span> ${item.selectedText}
+                                </p>
+                                ${!item.isCorrect ? `
+                                    <p class="text-emerald-700 dark:text-emerald-300">
+                                        <span class="font-semibold">Правильна відповідь:</span> ${item.correctText}
+                                    </p>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                reviewList.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Копіювання результату в буфер обміну (безпечний метод для iframe)
+        function copyResultToClipboard() {
+            const total = state.questions.length;
+            const grade12 = Math.max(1, Math.round((state.score / total) * 12));
+            const formattedTime = formatTime(state.secondsElapsed);
+            
+            const summaryText = `Географія 8 клас (§§ 12–18)\nУчень/учениця: ${state.studentName}\nРезультат: ${state.score} з ${total} правильних відповідей\nОцінка: ${grade12} балів (за 12-бальною шкалою)\nЧас виконання: ${formattedTime}`;
+
+            const textArea = document.createElement('textarea');
+            textArea.value = summaryText;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast();
+            } catch (err) {
+                console.error('Не вдалося скопіювати текст', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Події
+        startBtn.addEventListener('click', startQuiz);
+        studentNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startQuiz();
+        });
+        nextBtn.addEventListener('click', handleNext);
+        document.getElementById('copy-result-btn').addEventListener('click', copyResultToClipboard);
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            resultScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        });
+
+        // Згортання/розгортання детального огляду
+        const toggleReviewBtn = document.getElementById('toggle-review-btn');
+        const reviewList = document.getElementById('review-list');
+        toggleReviewBtn.addEventListener('click', () => {
+            const isHidden = reviewList.classList.toggle('hidden');
+            toggleReviewBtn.textContent = isHidden ? 'Розгорнути' : 'Згорнути';
+        });
+    </script>
+</body>
+</html>
